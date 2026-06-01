@@ -2,11 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/mustaqshaik322-ux/jenkins-demo.git'
-            }
-        }
 
         stage('Build & Deploy with Docker Compose') {
             steps {
