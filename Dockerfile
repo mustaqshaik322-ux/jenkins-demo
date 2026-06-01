@@ -1,5 +1,5 @@
-FROM nginx:latest
-
-COPY . /usr/share/nginx/html
-
-EXPOSE 80
+<<<<<<< HEAD
+(old content)
+=======
+(new content)
+>>>>>>> commit
