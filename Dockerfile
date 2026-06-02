@@ -1,5 +1,9 @@
 <<<<<<< HEAD
-(old content)
+FROM node:18
+WORKDIR /app
+COPY . .
 =======
-(new content)
->>>>>>> commit
+FROM node:20
+WORKDIR /app
+COPY ./app .
+>>>>>>> abc123
