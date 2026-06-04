@@ -1,104 +1,55 @@
 pipeline {
     agent any
 
- HEAD
+    environment {
+        IMAGE_NAME = "node-app:v1"
+        CONTAINER_NAME = "node-container"
+    }
+
     stages {
 
         stage('Checkout') {
-
-    environment {
-        APP_NAME = "node-mysql-app"
-    }
-
-    stages {
-
-        stage('Checkout Code') {
- 126c9eb (Updated CI/CD pipeline)
             steps {
                 git branch: 'main',
-                url: 'https://github.com/mustaqshaik322-ux/jenkins-demo.git'
+                    url: 'https://github.com/mustaqshaik322-ux/jenkins-demo.git'
             }
         }
 
- HEAD
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t node-app:v1 ./app'
+                sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
-        stage('Stop Old Containers') {
+        stage('Stop Old Container') {
             steps {
                 sh '''
-                docker compose down || true
-                docker rm -f node-container || true
-
-        stage('Cleanup Old Containers') {
-            steps {
-                sh '''
-                echo "Stopping old containers..."
-
-                docker compose down || true
-
-                docker rm -f node-compose-container || true
-
-                docker container prune -f || true
-                docker image prune -f || true
+                docker rm -f $CONTAINER_NAME || true
                 '''
             }
         }
 
-        stage('Build') {
+        stage('Run Container') {
             steps {
                 sh '''
-                echo "Building images..."
-                docker compose build
->>>>>>> 126c9eb (Updated CI/CD pipeline)
+                docker run -d \
+                --name $CONTAINER_NAME \
+                -p 3000:3000 \
+                $IMAGE_NAME
                 '''
             }
         }
 
-        stage('Deploy') {
+        stage('Verify') {
             steps {
-<<<<<<< HEAD
-                sh 'docker compose up -d --build'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'curl http://localhost:3000 || true'
-            }
-        }
-    }
-=======
-                sh '''
-                echo "Starting containers..."
-                docker compose up -d
-                '''
-            }
-        }
-
-        stage('Health Check') {
-            steps {
-                sh '''
-                echo "Checking application..."
-
-                sleep 10
-                curl -f http://localhost:3000 || exit 1
-                '''
+                sh 'docker ps'
             }
         }
     }
 
     post {
-        success {
-            echo "✅ Deployment SUCCESS"
-        }
-
-        failure {
-            echo "❌ Deployment FAILED"
+        always {
+            sh 'docker image prune -af || true'
         }
     }
->>>>>>> 126c9eb (Updated CI/CD pipeline)
 }
