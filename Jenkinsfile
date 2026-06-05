@@ -1,7 +1,6 @@
 pipeline {
 agent any
 
-```
 environment {
     IMAGE_NAME = "node-app:v1"
     CONTAINER_NAME = "node-container"
@@ -46,7 +45,6 @@ post {
         sh 'docker image prune -af || true'
     }
 }
-```
 
 }
 
